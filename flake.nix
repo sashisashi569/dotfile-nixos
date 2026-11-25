@@ -1,0 +1,82 @@
+{
+  description = "Noctalia Family NixOS dotfiles (sashi-main / sashi-letsnote)";
+
+  nixConfig = {
+    # Binary caches for the two non-nixpkgs package sources used here:
+    # chaotic-nyx (CachyOS kernel) and aagl (anime game launchers).
+    extra-substituters = [
+      "https://nyx-cache.chaotic.cx/"
+      "https://ezkea.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nyx-cache.chaotic.cx:dJxTrgMC3V3cFfyIiBQDQorG6k1LsqurH/srpMSq7qk="
+      "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
+    ];
+  };
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    # Intentionally not following our nixpkgs: chaotic-nyx pins its own
+    # nixpkgs revision so its binary cache substitutions actually hit.
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    aagl = {
+      url = "github:ezKEa/aagl-gtk-on-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      nix-flatpak,
+      aagl,
+      chaotic,
+      ...
+    }@inputs:
+    let
+      system = "x86_64-linux";
+
+      mkHost =
+        host:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./hosts/${host}/default.nix
+            home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
+            aagl.nixosModules.default
+            chaotic.nixosModules.default
+            {
+              nix.settings = aagl.nixConfig;
+
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.sharedModules = [
+                nix-flatpak.homeManagerModules.nix-flatpak
+              ];
+            }
+          ];
+        };
+    in
+    {
+      nixosConfigurations = {
+        sashi-main = mkHost "sashi-main";
+        sashi-letsnote = mkHost "sashi-letsnote";
+      };
+
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
+    };
+}

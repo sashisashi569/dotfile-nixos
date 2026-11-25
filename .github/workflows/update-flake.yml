@@ -1,0 +1,75 @@
+name: Update flake.lock and evaluate hosts
+
+on:
+  schedule:
+    # Monday 21:00 JST (12:00 UTC).  The local rebuild timer runs one hour
+    # later, so a successful lock update is available before 22:00 JST.
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-flake-lock
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/local/share/boost \
+            "${AGENT_TOOLSDIRECTORY}" || true
+          sudo apt-get clean
+          df -h /
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Update flake inputs
+        run: nix flake update
+
+      # Build both hosts.  The workflow only commits flake.lock if every
+      # configuration evaluates and builds; a failure leaves the remote lock
+      # at the last known-good revision, which is what the local weekly
+      # rebuild consumes.
+      - name: Build sashi-main and sashi-letsnote
+        run: |
+          nix build \
+            --accept-flake-config \
+            --no-link \
+            --print-out-paths \
+            .#nixosConfigurations.sashi-main.config.system.build.toplevel \
+            .#nixosConfigurations.sashi-letsnote.config.system.build.toplevel
+
+      - name: Commit and push flake.lock
+        run: |
+          if git diff --quiet -- flake.lock; then
+            echo "flake.lock is already up to date"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add flake.lock
+          git commit -m "flake.lock: weekly update $(date -u +%F)"
+          git pull --rebase origin main
+          git push origin HEAD:main
