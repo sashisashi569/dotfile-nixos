@@ -36,7 +36,7 @@ in
   xdg.configFile."umbriel/config.toml".text = ''
     ${import ../../sashi/lib/umbriel-base.nix {
       inherit noctalia;
-      foot = pkgs.foot;
+      kitty = pkgs.kitty;
     }}
 
     # Monitors, left to right: AOC G2490W1G4 (portrait) | Dell G2725D |

@@ -1,6 +1,5 @@
-# Gaming-only home packages and Flatpaks.  The system-side Steam/Gamescope/AAGL
-# stack is enabled by sashi.desktop.gaming.enable in
-# system/desktop-environment.
+# Gaming-only home packages and Flatpaks.  The system-side Steam/AAGL stack is
+# enabled by sashi.desktop.gaming.enable in system/desktop-environment.
 { pkgs, ... }:
 
 {

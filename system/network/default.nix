@@ -7,8 +7,6 @@
 }:
 
 {
-  imports = [ ./searxng.nix ];
-
   networking.networkmanager = {
     enable = true;
     dns = "systemd-resolved";
@@ -32,7 +30,4 @@
   };
 
   services.tailscale.enable = true;
-
-  # Local-only SearXNG, reached over the loopback JSON API by MCP servers.
-  # The service configuration itself lives in ./searxng.nix.
 }

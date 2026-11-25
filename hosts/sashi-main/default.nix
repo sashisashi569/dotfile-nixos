@@ -28,11 +28,8 @@
   # Compute host: libvirt/QEMU and virt-manager.
   sashi.develop.virtualisation.enable = true;
 
-  # Gaming: Steam, Gamescope, AAGL launchers.
+  # Gaming: Steam and AAGL launchers.
   sashi.desktop.gaming.enable = true;
-  # Pin Gamescope's Vulkan device to the NVIDIA GPU (PCI ID from
-  # /sys/class/drm/card2/device/{vendor,device}).
-  sashi.desktop.gamescopeVulkanDevice = "10de:2882";
 
   home-manager.users.sashi.imports = [
     ../../sashi/core

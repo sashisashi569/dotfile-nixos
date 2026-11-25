@@ -12,6 +12,6 @@
   # sashi-main output sections.  Umbriel auto-configures eDP.
   xdg.configFile."umbriel/config.toml".text = import ../../sashi/lib/umbriel-base.nix {
     noctalia = config.programs.noctalia.package;
-    foot = pkgs.foot;
+    kitty = pkgs.kitty;
   };
 }

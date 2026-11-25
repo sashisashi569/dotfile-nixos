@@ -35,17 +35,14 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 │   ├── boot/                        # systemd-boot, CachyOS kernel, BBR3
 │   ├── core/                        # Nix/ロケール/ユーザー/自動更新/GC/polkit/shred
 │   ├── develop/                     # nix-ld, 開発 CLI, libvirt (任意)
-│   ├── network/                     # NM, resolved, Avahi, Tailscale, SearXNG
+│   ├── network/                     # NM, resolved, Avahi, Tailscale
 │   ├── graphics/                    # ベンダー非依存の graphics 基盤
 │   ├── nvidia/                      # NVIDIA driver, VA-API, OpenCL, 環境変数
-│   └── desktop-environment/         # Umbriel/Noctalia Greeter/PipeWire/IME/gaming
+│   └── desktop-environment/         # Umbriel/Noctalia Greeter/PipeWire/GStreamer/IME/gaming
 ├── sashi/
 │   ├── core/                        # 両ホスト共通の home-manager 設定
 │   ├── gaming/                      # sashi-main のみ
 │   └── lib/                         # Umbriel/Noctalia の共通設定（純粋な関数）
-├── packages/
-│   ├── mozkey/                      # fcitx5-mozkey のパッケージ定義
-│   └── rename-music-by-tags/        # 旧 path: input をリポジトリ内へ移動
 ├── .github/workflows/update-flake.yml
 └── rebuild.sh
 ```
@@ -98,7 +95,6 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 | option | NetworkManager + systemd-resolved（mDNS, LLMNR off, DNSSEC off） |
 | option | Avahi（nssmdns4, firewall 開放） |
 | option | Tailscale |
-| option | ローカル専用 SearXNG（`127.0.0.1:8080`, JSON API） |
 
 ### `system/graphics`
 
@@ -125,22 +121,21 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 | option | PipeWire（44.1–768 kHz, resample quality 15） |
 | option | CUPS, Flatpak, gvfs, udisks2, tumbler, dconf |
 | option | Firefox（VA-API 有効化） |
-| package | `obs-studio` |
-| option | fcitx5 + Mozkey（`ime.nix`） |
-| env | `QT_QPA_PLATFORMTHEME=qt6ct`, `NIXOS_OZONE_WL` など |
-| option | `sashi.desktop.gaming.enable`（Steam/Gamescope/AAGL） |
-| option | `sashi.desktop.gamescopeVulkanDevice` |
+| package | `obs-studio`, GStreamer（base/good/bad/ugly/libav） |
+| option | fcitx5 + `fcitx5-mozc`（`ime.nix`） |
+| env | `QT_QPA_PLATFORMTHEME=qt6ct`, `NIXOS_OZONE_WL`, `GST_PLUGIN_SYSTEM_PATH_1_0` など |
+| option | `sashi.desktop.gaming.enable`（Steam/AAGL） |
 
 ### `sashi/core`（home-manager）
 
 | 分類 | 内容 |
 | --- | --- |
-| package | `keepassxc`, `yubioath-flutter`, `thunderbird`, `tor-browser`, `opencode`, `uv`, `nodejs_22`, `arduino-ide`, `nautilus`, `foot` など |
-| package | `mpd`, `euphonica`, `picard`, `whipper` ラッパー, `mkvtoolnix`, `rename-music-by-tags` |
-| option | Flatpak remotes / apps / Peergos override |
+| package | `keepassxc`, `yubioath-flutter`, `thunderbird`, `tor-browser`, `opencode`, `uv`, `nodejs_22`, `arduino-ide`, `nautilus`, `eog`, `mpv`, `kitty` など |
+| package | `picard`, `whipper` ラッパー, `mkvtoolnix` |
+| option | Flatpak apps（Recordbox） |
 | option | MIME apps, GTK/dconf, pointer cursor |
-| option | rclone の keepass/taildrive マウント, MPD user unit |
-| option | `programs.noctalia.enable`（設定はホスト側）, `aria2`, `qbittorrent` |
+| option | rclone の keepass/taildrive マウント |
+| option | `programs.noctalia.enable`（設定はホスト側） |
 | option | SSH/Git/GitHub CLI |
 
 ### `sashi/gaming`（home-manager / sashi-main のみ）
@@ -277,9 +272,6 @@ nix build --accept-flake-config --no-link \
 
 ## 設計上の変更点
 
-- **`music-tools` をリポジトリ内へ移動** — 旧 `path:/home/sashi/...` の
-  flake input は GitHub Actions のクリーンなランナーで評価できないため、
-  `packages/rename-music-by-tags` として同梱しました。
 - **`nativeOptimization` を既定 off** — リモート CI のビルド結果とホストの
   インストール結果を一致させるためです。旧構成の `-march=native` を復元
   したい場合は `hosts/sashi-main/default.nix` で

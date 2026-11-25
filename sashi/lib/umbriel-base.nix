@@ -7,7 +7,7 @@
 # ~/.config/umbriel/noctalia.toml; that file is intentionally not managed here.
 {
   noctalia,
-  foot,
+  kitty,
 }:
 
 ''
@@ -23,7 +23,6 @@
   [general]
   autostart = [
     "fcitx5 -d",
-    "aria2-tray",
   ]
   xwayland = true
   show_cheatsheet = true
@@ -90,7 +89,7 @@
   [keybinds]
 
   # --- Applications / session ---
-  "Mod+T" = { action = "spawn ${foot}/bin/foot", repeat = false }
+  "Mod+T" = { action = "spawn ${kitty}/bin/kitty", repeat = false }
   "Mod+Space" = "spawn ${noctalia}/bin/noctalia msg panel-toggle launcher"
   "Mod+Q" = { action = "window-close", repeat = false }
   "Mod+Escape" = "session-quit"

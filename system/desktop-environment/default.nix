@@ -1,6 +1,6 @@
 # Noctalia Family desktop: Umbriel (compositor) + Noctalia (shell) +
-# Noctalia Greeter (greetd), plus audio, printing, flatpak and the gaming
-# stack used by sashi-main.
+# Noctalia Greeter (greetd), plus PipeWire/GStreamer, printing, flatpak and
+# the gaming stack used by sashi-main.
 {
   config,
   lib,
@@ -10,6 +10,15 @@
 
 let
   cfg = config.sashi.desktop;
+
+  gstPlugins = with pkgs.gst_all_1; [
+    gstreamer
+    gst-plugins-base
+    gst-plugins-good
+    gst-plugins-bad
+    gst-plugins-ugly
+    gst-libav
+  ];
 in
 {
   imports = [ ./ime.nix ];
@@ -19,18 +28,8 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Enable Steam, Gamescope and the AAGL anime-game launchers.  This also
-        makes the aagl NixOS module's telemetry blocking active.
-      '';
-    };
-
-    gamescopeVulkanDevice = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      example = "10de:2882";
-      description = ''
-        Optional PCI vendor:device ID passed to Gamescope via
-        `--prefer-vk-device`.  Useful on hybrid/dual-GPU machines.
+        Enable Steam and the AAGL anime-game launchers.  This also makes the
+        aagl NixOS module's telemetry blocking active.
       '';
     };
   };
@@ -168,11 +167,14 @@ in
         };
       };
 
-      environment.systemPackages = with pkgs; [
-        # Virtual Camera output is built in (no obs-v4l2sink plugin needed);
-        # it feeds the v4l2loopback device set up in the host hardware module.
-        obs-studio
-      ];
+      environment.systemPackages =
+        with pkgs;
+        [
+          # Virtual Camera output is built in (no obs-v4l2sink plugin needed);
+          # it feeds the v4l2loopback device set up in the host hardware module.
+          obs-studio
+        ]
+        ++ gstPlugins;
 
       # Qt apps go through qt6ct so they pick up Noctalia/matugen colors.
       environment.sessionVariables = {
@@ -182,6 +184,9 @@ in
         # Umbriel draws no server-side decorations; disable QtWayland's
         # client-side titlebar fallback to match GTK's ":" decoration layout.
         QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+        # Make the GStreamer plugins installed above discoverable by apps
+        # that are not wrapped with a GST_PLUGIN_SYSTEM_PATH_1_0 of their own.
+        GST_PLUGIN_SYSTEM_PATH_1_0 = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" gstPlugins;
       };
     }
 
@@ -190,18 +195,6 @@ in
         enable = true;
         remotePlay.openFirewall = true;
         dedicatedServer.openFirewall = false;
-        gamescopeSession = {
-          enable = true;
-          args = lib.optionals (cfg.gamescopeVulkanDevice != null) [
-            "--prefer-vk-device"
-            cfg.gamescopeVulkanDevice
-          ];
-        };
-      };
-
-      programs.gamescope = {
-        enable = true;
-        capSysNice = true;
       };
 
       # Universal launcher plus the dedicated per-game launchers for titles

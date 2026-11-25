@@ -10,11 +10,6 @@
 }:
 
 {
-  imports = [
-    ./aria2.nix
-    ./torrent.nix
-  ];
-
   home.username = "sashi";
   home.homeDirectory = "/home/sashi";
   home.stateVersion = "26.05";
@@ -23,7 +18,7 @@
     keepassxc
     yubioath-flutter
     monophony
-    celluloid
+    mpv
     libdvdcss
     picard
     mkvtoolnix # mkvmerge
@@ -44,38 +39,32 @@
         exec "$real_whipper" "$@"
       '';
     })
-    mpd
-    euphonica
-    (pkgs.callPackage ../../packages/rename-music-by-tags { })
     rclone
     thunderbird
     tor-browser
     uv
-    nodejs_22 # npx: opencode MCP servers (e.g. mcp-searxng)
+    nodejs_22 # npx: opencode MCP servers
     opencode
     usbimager
-    megasync
 
     arduino-ide
 
-    # file manager
+    # File manager and image viewer
     nautilus
+    eog
     ffmpegthumbnailer
     gvfs
     gnome-disk-utility # mount .iso/.img from Nautilus
 
-    # Wayland utilities: foot is the terminal, wl-clipboard backs shell
+    # Wayland utilities: kitty is the terminal, wl-clipboard backs shell
     # scripts.  Screenshots go through Noctalia's built-in capture.
     wl-clipboard
-    foot
+    kitty
 
     # Let Qt apps pick up Noctalia/matugen-generated colors
     # (QT_QPA_PLATFORMTHEME is set by the system desktop module).
     qt6Packages.qt6ct
     libsForQt5.qt5ct
-
-    # Peergos' Flatpak calls the host zenity for its folder picker.
-    zenity
   ];
 
   programs.noctalia = {
@@ -94,35 +83,12 @@
     ${pkgs.coreutils}/bin/rm -f "${config.home.homeDirectory}/.local/state/noctalia/settings.toml"
   '';
 
-  # The default remote list is replaced by any explicit definition, so merge
-  # the Peergos repo into it rather than dropping Flathub.
-  services.flatpak.remotes = lib.mkOptionDefault [
-    {
-      name = "peergos";
-      location = "https://flatpak.peergos.org/peergos.flatpakrepo";
-    }
-  ];
-
   services.flatpak.packages = [
     {
       appId = "ca.edestcroix.Recordbox";
       origin = "flathub";
     }
-    {
-      appId = "org.peergos.Peergos";
-      origin = "peergos";
-    }
-    # Chromium's proprietary codec extension: without it Peergos can't play
-    # H.264/MP4 videos.  VP9/WebM work regardless.
-    {
-      appId = "org.chromium.Chromium.Codecs";
-      origin = "flathub";
-    }
   ];
-
-  # WebAuthn security keys need raw USB device access from inside the
-  # sandbox (`flatpak override --user --device=all org.peergos.Peergos`).
-  services.flatpak.overrides.settings."org.peergos.Peergos".Context.devices = [ "all" ];
 
   xdg.mimeApps = {
     enable = true;
@@ -198,43 +164,6 @@
       ExecStop = "${pkgs.fuse3}/bin/fusermount3 -u %h/Taildrive";
       Restart = "on-failure";
       RestartSec = "10";
-    };
-    Install.WantedBy = [ "default.target" ];
-  };
-
-  # Hand-rolled instead of services.mpd: that module always writes a
-  # playlist_directory line (and mkdir's it), but we want playlist
-  # save/load left disabled entirely rather than pointed at an unused
-  # folder.  Output is PipeWire-only with no "format" pinned and the
-  # resampler set to the cheap "internal" plugin, so MPD passes audio
-  # through untouched and PipeWire's graph does any rate conversion.
-  xdg.configFile."mpd/mpd.conf".text = ''
-    music_directory  "${config.home.homeDirectory}/Nextcloud/Music"
-    db_file          "${config.xdg.dataHome}/mpd/tag_cache"
-    state_file       "${config.xdg.dataHome}/mpd/state"
-    sticker_file     "${config.xdg.dataHome}/mpd/sticker.sql"
-    bind_to_address  "127.0.0.1"
-
-    resampler {
-        plugin "internal"
-    }
-
-    audio_output {
-        type "pipewire"
-        name "PipeWire"
-    }
-  '';
-
-  systemd.user.services.mpd = {
-    Unit = {
-      Description = "Music Player Daemon";
-      After = [ "pipewire.service" ];
-    };
-    Service = {
-      Type = "notify";
-      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/.local/share/mpd";
-      ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon %h/.config/mpd/mpd.conf";
-      Restart = "on-failure";
     };
     Install.WantedBy = [ "default.target" ];
   };
