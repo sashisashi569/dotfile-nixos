@@ -91,7 +91,7 @@
   # ~/.config/noctalia/config.toml.  Remove the override on activation so the
   # flake remains the source of truth.
   home.activation.removeNoctaliaStateOverride = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    rm -f "${config.home.homeDirectory}/.local/state/noctalia/settings.toml"
+    ${pkgs.coreutils}/bin/rm -f "${config.home.homeDirectory}/.local/state/noctalia/settings.toml"
   '';
 
   # The default remote list is replaced by any explicit definition, so merge
