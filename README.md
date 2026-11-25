@@ -239,11 +239,11 @@ LUKS・ESP の UUID・CPU microcode などは必ず実機の値にします。
 
 ```bash
 # sashi-main（旧 hostname のままでも rebuild.sh が読み替えます）
-pkexec ./rebuild.sh boot
+pkexec "$PWD/rebuild.sh" boot
 sudo reboot
 
 # sashi-letsnote
-pkexec env NIXOS_HOST=sashi-letsnote ./rebuild.sh boot
+pkexec env NIXOS_HOST=sashi-letsnote "$PWD/rebuild.sh" boot
 ```
 
 `pkexec` は Wayland セッションの polkit ダイアログを使うためです。
