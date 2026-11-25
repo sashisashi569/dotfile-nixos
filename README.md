@@ -121,7 +121,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 | option | PipeWire（44.1–768 kHz, resample quality 15） |
 | option | CUPS, Flatpak, gvfs, udisks2, tumbler, dconf |
 | option | Firefox（VA-API 有効化） |
-| package | `obs-studio`, GStreamer（base/good/bad/ugly/libav） |
+| package | GStreamer（base/good/bad/ugly/libav） |
 | option | fcitx5 + `fcitx5-mozc`（`ime.nix`） |
 | env | `QT_QPA_PLATFORMTHEME=qt6ct`, `NIXOS_OZONE_WL`, `GST_PLUGIN_SYSTEM_PATH_1_0` など |
 | option | `sashi.desktop.gaming.enable`（Steam/AAGL） |

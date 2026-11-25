@@ -167,12 +167,7 @@ in
         };
       };
 
-      environment.systemPackages =
-        with pkgs;
-        [
-          obs-studio
-        ]
-        ++ gstPlugins;
+      environment.systemPackages = gstPlugins;
 
       # Qt apps go through qt6ct so they pick up Noctalia/matugen colors.
       environment.sessionVariables = {
