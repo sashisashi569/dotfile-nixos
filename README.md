@@ -88,7 +88,6 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 | --- | --- |
 | option | `programs.nix-ld` + `icu/openssl/zlib/curl/libunwind/fuse` |
 | package | `git`, `openssh`, `vim-full`, `gcc`, `gnumake`, `pkg-config`, `jq`, `ripgrep`, `fd`, `unzip`, `zip` |
-| package | `rename-music-by-tags`（リポジトリ内パッケージ） |
 | option | `sashi.develop.virtualisation.enable`（既定 `false`） |
 | option | libvirt/QEMU, virt-manager, spice USB, virbr0:5000, dconf |
 
@@ -137,7 +136,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 | 分類 | 内容 |
 | --- | --- |
 | package | `keepassxc`, `yubioath-flutter`, `thunderbird`, `tor-browser`, `opencode`, `uv`, `nodejs_22`, `arduino-ide`, `nautilus`, `foot` など |
-| package | `mpd`, `euphonica`, `picard`, `whipper` ラッパー, `mkvtoolnix` |
+| package | `mpd`, `euphonica`, `picard`, `whipper` ラッパー, `mkvtoolnix`, `rename-music-by-tags` |
 | option | Flatpak remotes / apps / Peergos override |
 | option | MIME apps, GTK/dconf, pointer cursor |
 | option | rclone の keepass/taildrive マウント, MPD user unit |
@@ -206,6 +205,9 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 
 リモート URL を変えた場合は `sashi.autoUpgrade.flake` を実際のリポジトリに
 合わせてください。GitHub Actions の cron も同じ曜日・時刻を基準にしています。
+リポジトリが private の場合、自動更新サービスは root として flake を取得する
+ため、root から GitHub へアクセスできる認証（`git+ssh` の鍵や access token）
+が必要です。
 
 > 概要の「隔週」と詳細仕様の「毎週」が食い違うため、実装は詳細仕様の
 > **毎週** に合わせています。隔週にしたい場合は、Action に ISO 週の偶奇で

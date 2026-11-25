@@ -50,8 +50,6 @@ in
         fd
         unzip
         zip
-
-        (pkgs.callPackage ../../packages/rename-music-by-tags { })
       ];
     }
 

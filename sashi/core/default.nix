@@ -46,6 +46,7 @@
     })
     mpd
     euphonica
+    (pkgs.callPackage ../../packages/rename-music-by-tags { })
     rclone
     thunderbird
     tor-browser
