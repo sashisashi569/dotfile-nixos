@@ -2,9 +2,9 @@ name: Update flake.lock and evaluate hosts
 
 on:
   schedule:
-    # Monday 21:00 JST (12:00 UTC).  The local rebuild timer runs one hour
-    # later, so a successful lock update is available before 22:00 JST.
-    - cron: "0 12 * * 1"
+    # Sunday 21:00 JST (12:00 UTC).  The local rebuild timer runs on Monday
+    # 22:00 JST, leaving a full day for a slow CI build to finish and push.
+    - cron: "0 12 * * 0"
   workflow_dispatch:
 
 permissions:

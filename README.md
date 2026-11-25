@@ -162,7 +162,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 
 ### GitHub Actions（`.github/workflows/update-flake.yml`）
 
-毎週月曜 12:00 UTC（21:00 JST）に:
+毎週日曜 12:00 UTC（21:00 JST）に:
 
 1. `nix flake update` を実行
 2. `sashi-main` と `sashi-letsnote` の `system.build.toplevel` を `nix build`
@@ -173,7 +173,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 **Read and write** にし、`main` の branch protection が bot の push を
 妨げないようにしてください。
 
-ローカルの再ビルドはこの push の 1 時間後（22:00 JST）に走るため、
+ローカルの再ビルドは翌日月曜 22:00 JST に走るため、CI が遅延しても
 通常は同じ週の更新をそのまま取得できます。
 
 ### ローカル（`system/core/auto-upgrade.nix`）
