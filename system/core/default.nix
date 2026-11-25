@@ -11,6 +11,7 @@
   imports = [
     ./auto-upgrade.nix
     ./gc.nix
+    ./keychron.nix
     ./polkit.nix
     ./shred.nix
   ];

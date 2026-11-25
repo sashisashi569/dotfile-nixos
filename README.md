@@ -21,8 +21,8 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 │   ├── sashi-main/
 │   │   ├── default.nix              # ホストの import とオプション有効化
 │   │   ├── hardware-configuration.nix
-│   │   ├── hardware.nix             # r8125 / v4l2loopback / iGPU 無効化
-│   │   ├── keychron.nix, fiio.nix   # 周辺機器の udev ルール
+│   │   ├── hardware.nix             # r8125 / iGPU 無効化
+│   │   ├── fiio.nix                 # FiiO の udev ルール
 │   │   ├── home.nix
 │   │   ├── umbriel.nix              # 3 モニタ固有の出力・workspace 設定
 │   │   └── noctalia.nix             # バー・壁紙・ロック画面
@@ -33,7 +33,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 │       └── noctalia.nix
 ├── system/
 │   ├── boot/                        # systemd-boot, CachyOS kernel, BBR3
-│   ├── core/                        # Nix/ロケール/ユーザー/自動更新/GC/polkit/shred
+│   ├── core/                        # Nix/ロケール/ユーザー/udev/自動更新/GC/polkit/shred
 │   ├── develop/                     # nix-ld, 開発 CLI, libvirt (任意)
 │   ├── network/                     # NM, resolved, Avahi, Tailscale
 │   ├── graphics/                    # ベンダー非依存の graphics 基盤
@@ -149,7 +149,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 
 | ホスト | 内容 |
 | --- | --- |
-| sashi-main | NVIDIA, gaming, libvirt, r8125, Keychron/FiiO udev, 3 モニタ Umbriel/Noctalia |
+| sashi-main | NVIDIA, gaming, libvirt, r8125, FiiO udev, 3 モニタ Umbriel/Noctalia |
 | sashi-letsnote | NVIDIA/gaming なし, 単一パネル Umbriel/Noctalia, hardware-config はプレースホルダ |
 
 ## 自動更新・自動アップグレード

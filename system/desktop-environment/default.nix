@@ -170,8 +170,6 @@ in
       environment.systemPackages =
         with pkgs;
         [
-          # Virtual Camera output is built in (no obs-v4l2sink plugin needed);
-          # it feeds the v4l2loopback device set up in the host hardware module.
           obs-studio
         ]
         ++ gstPlugins;

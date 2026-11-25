@@ -9,7 +9,6 @@
   imports = [
     ./hardware-configuration.nix
     ./hardware.nix
-    ./keychron.nix
     ./fiio.nix
 
     ../../system/boot
