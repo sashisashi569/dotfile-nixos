@@ -61,6 +61,10 @@
     wl-clipboard
     kitty
 
+    # Terminal font.  JetBrains Mono has stronger stems and better hinting
+    # than fontconfig's default DejaVu Sans Mono at terminal sizes.
+    jetbrains-mono
+
     # Let Qt apps pick up Noctalia/matugen-generated colors
     # (QT_QPA_PLATFORMTHEME is set by the system desktop module).
     qt6Packages.qt6ct
@@ -81,6 +85,26 @@
   # flake remains the source of truth.
   home.activation.removeNoctaliaStateOverride = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     ${pkgs.coreutils}/bin/rm -f "${config.home.homeDirectory}/.local/state/noctalia/settings.toml"
+  '';
+
+  # Kitty has no config by default, so it uses DejaVu Sans Mono at 11pt.
+  # That looks soft on the 27" 2560x1440 panel.  Use JetBrains Mono with
+  # explicit Japanese fallback, a slightly larger size, and a little extra
+  # glyph contrast for light text on the dark background.  Monitor scale is
+  # 1.0 on every output; kitty computes DPI itself, so no fractional scaling
+  # is involved here.
+  xdg.configFile."kitty/kitty.conf".text = ''
+    font_family JetBrains Mono
+    # kitty renders at 96 DPI here, so 12pt is exactly 16px (integer pixels
+    # keep FreeType hinting crisp); 12.5pt would land on 16.67px.
+    font_size 12
+
+    # Keep Japanese in the Japanese variant; fontconfig otherwise falls back
+    # to Noto Sans Mono CJK KR for these ranges.
+    symbol_map U+3000-U+30FF,U+31F0-U+31FF,U+3200-U+33FF,U+3400-U+4DBF,U+4E00-U+9FFF,U+F900-U+FAFF,U+FE10-U+FE1F,U+FE30-U+FE4F,U+FF00-U+FFEF Noto Sans Mono CJK JP
+
+    # Linux default is "1.0 0"; a little contrast makes glyphs less washed out.
+    text_composition_strategy 1.0 20
   '';
 
   services.flatpak.packages = [
