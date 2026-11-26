@@ -56,7 +56,7 @@ in
         enabled = true;
         interval_seconds = 720;
       };
-      default.path = "/home/sashi/Wallpapers/dsallstar2_wallpaper_3840x2160.jpg";
+      default.path = "/home/sashi/Wallpapers/Landspace/dsallstar2_wallpaper_3840x2160.jpg";
       monitor = {
         "AOC" = {
           directory = "/home/sashi/Wallpapers/Portrait";
@@ -95,7 +95,7 @@ in
           placement_height = 1920.0;
           rotation = 0.0;
           settings = {
-            background_color = "surface_variant";
+            background_color = "surface_container";
             background_opacity = 0.88;
             background_radius = 12.0;
             center_password_text = false;
@@ -122,7 +122,7 @@ in
           placement_height = 1440.0;
           rotation = 0.0;
           settings = {
-            background_color = "surface_variant";
+            background_color = "surface_container";
             background_opacity = 0.88;
             background_radius = 12.0;
             center_password_text = false;
@@ -149,7 +149,7 @@ in
           placement_height = 1920.0;
           rotation = 0.0;
           settings = {
-            background_color = "surface_variant";
+            background_color = "surface_container";
             background_opacity = 0.88;
             background_radius = 12.0;
             center_password_text = false;
