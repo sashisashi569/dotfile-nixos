@@ -39,7 +39,16 @@ this limit without checking `df -h /boot`; if space is tight, lower it to 5–8.
 
 - Verify that the machine really boots in UEFI mode (`bootctl status`), that
   `/boot` is the ESP, and that Secure Boot is currently **disabled or in setup
-  mode**.  sashi-main is in setup mode today.
+  mode**.
+- **sashi-main status (2026-11-28):** enrollment is complete.  The machine boots
+  with `Secure Boot: enabled (user)`, Setup Mode is disabled, and the custom
+  PK/KEK/db plus the Microsoft certificates are enrolled.  The installed
+  Windows has BitLocker disabled, and this ASUS firmware exposes no `dbx`
+  variable.  The one-time ESP backup is
+  `/var/tmp/boot-before-lanzaboote-20261128-125627.tar.gz`; the key backup is
+  `/root/sbctl-backup-20261128-125627.tar.gz` and should be moved to offline
+  media.  The procedure below remains the reference for a fresh install, for
+  sashi-letsnote, and for recovery.
 - Update the firmware first.  A firmware update is much easier before custom
   keys are enrolled.
 - Set a firmware/BIOS password.  Secure Boot is not meaningful if anyone can
