@@ -32,6 +32,13 @@
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Pinned stable release, not master.  Keeping nixpkgs following our own
+    # input avoids pulling a second copy of nixpkgs into the closure.
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.2.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -42,6 +49,7 @@
       nix-flatpak,
       aagl,
       chaotic,
+      lanzaboote,
       ...
     }@inputs:
     let
@@ -54,6 +62,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             ./hosts/${host}/default.nix
+            lanzaboote.nixosModules.lanzaboote
             home-manager.nixosModules.home-manager
             nix-flatpak.nixosModules.nix-flatpak
             aagl.nixosModules.default

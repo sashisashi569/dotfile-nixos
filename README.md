@@ -32,7 +32,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 │       ├── home.nix
 │       └── noctalia.nix
 ├── system/
-│   ├── boot/                        # systemd-boot, CachyOS kernel, BBR3
+│   ├── boot/                        # Lanzaboote Secure Boot, CachyOS kernel, BBR3
 │   ├── core/                        # Nix/ロケール/ユーザー/udev/自動更新/GC/polkit/shred
 │   ├── develop/                     # nix-ld, 開発 CLI, libvirt (任意)
 │   ├── network/                     # NM, resolved, Avahi, Tailscale
@@ -53,7 +53,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 
 | 分類 | 内容 |
 | --- | --- |
-| option | `boot.loader.systemd-boot`, EFI variables |
+| option | `boot.lanzaboote`（Secure Boot）、EFI variables |
 | option | `sashi.boot.cachyos.enable`（既定 `true`） |
 | option | `sashi.boot.cachyos.nativeOptimization`（既定 `false`） |
 | package | `linuxPackages_cachyos-bore` |
@@ -231,6 +231,10 @@ nixos-generate-config --show-hardware-config
 LUKS・ESP の UUID・CPU microcode などは必ず実機の値にします。
 
 ### 3. 初回ビルド
+
+> Secure Boot を有効にする場合、初回の `boot` の前に必ず
+> [`docs/secureboot.md`](docs/secureboot.md) の順序（鍵作成 → 署名済み
+> Lanzaboote のインストール → 鍵登録）に従ってください。
 
 ```bash
 # sashi-main（旧 hostname のままでも rebuild.sh が読み替えます）

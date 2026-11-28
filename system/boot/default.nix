@@ -56,8 +56,35 @@ in
 
   config = lib.mkMerge [
     {
-      boot.loader.systemd-boot.enable = true;
+      # Lanzaboote installs its own signed systemd-boot and Unified Kernel
+      # Images.  The stock systemd-boot module must be disabled even though
+      # both use the same underlying bootloader files.
+      boot.loader.systemd-boot.enable = lib.mkForce false;
+
+      # Lanzaboote reads/writes the EFI variables when enrolling keys.
       boot.loader.efi.canTouchEfiVariables = true;
+
+      boot.lanzaboote = {
+        enable = true;
+        pkiBundle = "/var/lib/sbctl";
+
+        # The ESP is 1 GiB and shared with Windows.  On sashi-main a kernel is
+        # ~19 MiB and the initrd ~28 MiB, so each retained generation costs
+        # roughly 47 MiB.  Ten generations (~470 MiB) leave room for Windows,
+        # systemd-boot, fwupd capsules, and the temporary overlap when
+        # Lanzaboote replaces systemd-boot.  See docs/secureboot.md before
+        # raising this.
+        configurationLimit = 10;
+      };
+
+      # Kernel command-line editing would let anyone with physical access add
+      # init=/bin/sh and bypass the LUKS login.  This is independent of Secure
+      # Boot but belongs with it.
+      boot.loader.systemd-boot.editor = false;
+
+      # Key generation, enrollment, and verification are deliberately manual;
+      # see docs/secureboot.md.
+      environment.systemPackages = [ pkgs.sbctl ];
     }
 
     (lib.mkIf cfg.cachyos.enable {
