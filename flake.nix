@@ -26,8 +26,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
-
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -46,7 +44,6 @@
       self,
       nixpkgs,
       home-manager,
-      nix-flatpak,
       aagl,
       chaotic,
       lanzaboote,
@@ -64,7 +61,6 @@
             ./hosts/${host}/default.nix
             lanzaboote.nixosModules.lanzaboote
             home-manager.nixosModules.home-manager
-            nix-flatpak.nixosModules.nix-flatpak
             aagl.nixosModules.default
             chaotic.nixosModules.default
             {
@@ -73,9 +69,6 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.sharedModules = [
-                nix-flatpak.homeManagerModules.nix-flatpak
-              ];
             }
           ];
         };

@@ -18,6 +18,7 @@
     keepassxc
     yubioath-flutter
     monophony
+    recordbox
     mpv
     libdvdcss
     picard
@@ -106,13 +107,6 @@
     # Linux default is "1.0 0"; a little contrast makes glyphs less washed out.
     text_composition_strategy 1.0 20
   '';
-
-  services.flatpak.packages = [
-    {
-      appId = "ca.edestcroix.Recordbox";
-      origin = "flathub";
-    }
-  ];
 
   xdg.mimeApps = {
     enable = true;

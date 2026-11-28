@@ -1,5 +1,5 @@
 # Noctalia Family desktop: Umbriel (compositor) + Noctalia (shell) +
-# Noctalia Greeter (greetd), plus PipeWire/GStreamer, printing, flatpak and
+# Noctalia Greeter (greetd), plus PipeWire/GStreamer, printing and
 # the gaming stack used by sashi-main.
 {
   config,
@@ -150,8 +150,6 @@ in
       # Bluetooth is harmless on machines without an adapter.
       services.upower.enable = true;
       hardware.bluetooth.enable = true;
-
-      services.flatpak.enable = true;
 
       services.gvfs.enable = true;
       services.udisks2.enable = true;

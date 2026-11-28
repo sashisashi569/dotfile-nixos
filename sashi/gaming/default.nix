@@ -1,29 +1,15 @@
-# Gaming-only home packages and Flatpaks.  The system-side Steam/AAGL stack is
-# enabled by sashi.desktop.gaming.enable in system/desktop-environment.
+# Gaming-only home packages.  The system-side Steam/AAGL stack is enabled by
+# sashi.desktop.gaming.enable in system/desktop-environment.
 { pkgs, ... }:
 
 {
   home.packages = with pkgs; [
     lutris
     bottles
-  ];
-
-  services.flatpak.packages = [
-    {
-      appId = "com.discordapp.Discord";
-      origin = "flathub";
-    }
-    {
-      appId = "com.github.tchx84.Flatseal";
-      origin = "flathub";
-    }
-    {
-      appId = "org.prismlauncher.PrismLauncher";
-      origin = "flathub";
-    }
-    {
-      appId = "sh.ppy.osu";
-      origin = "flathub";
-    }
+    discord
+    prismlauncher
+    # osu-lazer (source build) cannot submit scores or play multiplayer;
+    # osu-lazer-bin is the official build with those features.
+    osu-lazer-bin
   ];
 }

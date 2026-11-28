@@ -119,7 +119,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 | option | `programs.umbriel` |
 | option | `services.displayManager.noctalia-greeter` |
 | option | PipeWire（44.1–768 kHz, resample quality 15） |
-| option | CUPS, Flatpak, gvfs, udisks2, tumbler, dconf |
+| option | CUPS, gvfs, udisks2, tumbler, dconf |
 | option | Firefox（VA-API 有効化） |
 | package | GStreamer（base/good/bad/ugly/libav） |
 | option | fcitx5 + `fcitx5-mozc`（`ime.nix`） |
@@ -132,7 +132,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 | --- | --- |
 | package | `keepassxc`, `yubioath-flutter`, `thunderbird`, `tor-browser`, `opencode`, `uv`, `nodejs_22`, `arduino-ide`, `nautilus`, `eog`, `mpv`, `kitty` など |
 | package | `picard`, `whipper` ラッパー, `mkvtoolnix` |
-| option | Flatpak apps（Recordbox） |
+| package | `recordbox`（音楽プレイヤー） |
 | option | MIME apps, GTK/dconf, pointer cursor |
 | option | rclone の keepass/taildrive マウント |
 | option | `programs.noctalia.enable`（設定はホスト側） |
@@ -143,7 +143,7 @@ NixOS flake です。GitHub Actions が毎週 `flake.lock` を更新して全ホ
 | 分類 | 内容 |
 | --- | --- |
 | package | `lutris`, `bottles` |
-| option | Discord, Flatseal, PrismLauncher, osu! の Flatpak |
+| package | `discord`, `prismlauncher`, `osu-lazer-bin` |
 
 ### ホスト固有
 
